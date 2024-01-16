@@ -1,0 +1,22 @@
+<%  layout('layout/boilerplate') -%>
+<body>
+
+    <div class="row mt-5">
+        <div class="col-md-6 offset-3">
+            <div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">
+                    <% if (err._message) {%>
+                    <%= err._message %>
+                    <% }else { %>
+                    <%= err.message %>
+                    <% } %>
+                </h4>
+                <p><%= err.stack %></p>
+              </div>
+        
+
+        </div>
+    </div>
+
+
+</body>
