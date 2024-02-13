@@ -63,6 +63,7 @@ app.get('/campgrounds/:id', wrapAsync(async (req, res) => {
     const { id } = req.params
     const foundCamp = await Campground.findById(id).populate('reviews')
     res.render('campgrounds/show', { foundCamp, title: "Details - YelpCamp" })
+
 }))
 
 
@@ -103,10 +104,12 @@ app.post("/campgrounds/:id/reviews", async (req, res) => {
 
 })
 
-app.delete("/campground/:id/review/delete/:id1", async (req, res) => {
-    const { id,id1 } = req.params
-    await Review.findByIdAndDelete(id)
-    res.redirect(`/campgrounds/${id1}`)
+app.delete("/campground/:reviewId/review/delete/:campId", async (req, res) => {
+    const { reviewId, campId } = req.params
+    await Campground.findByIdAndUpdate(campId, { $pull: { reviews: reviewId } });
+    await Review.findByIdAndDelete(reviewId)
+    res.redirect(`/campgrounds/${campId}`)
+   
 
 
 })

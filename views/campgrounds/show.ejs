@@ -36,7 +36,7 @@
             </div>
             <div class="col-6">
                 <h2>Leave a Review</h2>
-                <form action="/campgrounds/<%=foundCamp._id%>/reviews" method="POST" class="mb-3 validated-form"
+                <form action="/campgrounds/<%=foundCamp._id%>/reviews" method="POST" class="mb-3 needs-validation"
                     novalidate>
                     <div class="mb-3">
                         <label class="form-label" for="rating">Rating</label>
@@ -44,7 +44,7 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="msg">Review</label>
-                        <textarea class="form-control" name="message" id="msg" cols="30" rows="3" required></textarea>
+                        <textarea class="form-control"  name="message" id="msg" cols="30" rows="3" required></textarea>
                         <div class="valid-feedback">
                             Looks good!
                         </div>
@@ -63,9 +63,10 @@
                             <p class="card-text">Review: <%= review.message %>
                             </p>
                             <div>
-                                <form action="/campground/<%= review._id  %>/review/delete/<%= foundCamp._id %>?_method=DELETE"
+                                <form
+                                    action="/campground/<%= review._id  %>/review/delete/<%= foundCamp._id %>?_method=DELETE"
                                     method="POST">
-                                    <button class="btn btn-danger"> Delete</button>
+                                    <button class="btn btn-sm btn-danger"> Delete</button>
                                 </form>
                             </div>
 
@@ -76,6 +77,6 @@
 
             </div>
         </div>
-        </div>
+        
 
     </body>
