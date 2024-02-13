@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const Review = require("./reviewsSchema")
 const Schema = mongoose.Schema
 
 const CampgroundSchema = new Schema({
@@ -10,7 +11,14 @@ const CampgroundSchema = new Schema({
     }, 
     description:String, 
     location: String, 
-    image: String
+    image: String,
+    reviews: [ 
+        {
+            type: Schema.Types.ObjectId ,
+            ref: 'Review'
+            
+        }
+    ]
 
 })
 
