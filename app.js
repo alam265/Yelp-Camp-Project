@@ -90,7 +90,7 @@ app.delete('/campgrounds/:id', wrapAsync(async (req, res) => {
 
 }))
 
-app.post("/campgrounds/:id/reviews", async (req, res) => {
+app.post("/campgrounds/:id/reviews", wrapAsync(async (req, res) => {
     const { id } = req.params
     const camp = await Campground.findById(id)
     const review = new Review(req.body)
@@ -102,9 +102,9 @@ app.post("/campgrounds/:id/reviews", async (req, res) => {
 
 
 
-})
+}))
 
-app.delete("/campground/:reviewId/review/delete/:campId", async (req, res) => {
+app.delete("/campground/:reviewId/review/delete/:campId", wrapAsync(async (req, res) => {
     const { reviewId, campId } = req.params
     await Campground.findByIdAndUpdate(campId, { $pull: { reviews: reviewId } });
     await Review.findByIdAndDelete(reviewId)
@@ -112,7 +112,7 @@ app.delete("/campground/:reviewId/review/delete/:campId", async (req, res) => {
    
 
 
-})
+}))
 
 
 app.all('*', (req, res, next) => {
