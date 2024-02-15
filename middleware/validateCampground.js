@@ -1,5 +1,5 @@
 const joiSchema = require("../Schema/joiSchema")
-const AppError = require("../uitlis/appError")
+const AppError = require("../utilis/appError")
 
 const validateCampground = (req, res, next) => {
     const { error } = joiSchema.validate(req.body);

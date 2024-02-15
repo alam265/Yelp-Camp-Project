@@ -64,7 +64,7 @@
                             </p>
                             <div>
                                 <form
-                                    action="/campground/<%= review._id  %>/review/delete/<%= foundCamp._id %>?_method=DELETE"
+                                    action="/campgrounds/<%= foundCamp._id  %>/reviews/delete/<%= review._id %>?_method=DELETE"
                                     method="POST">
                                     <button class="btn btn-sm btn-danger"> Delete</button>
                                 </form>
