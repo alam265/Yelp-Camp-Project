@@ -16,10 +16,30 @@ const methodOverride = require('method-override')
 
 app.use(methodOverride('_method'))
 
+app.use(express.static(path.join(__dirname, 'public')))
+
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
+
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
+
+//Session Setup
+const session = require('express-session')
+app.use(session
+    ({
+        secret: 'thisisnotagoodsecret!',
+        resave: false,  
+        saveUninitialized: true,
+        cookie: {
+            httpOnly: true,
+            expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+            maxAge: 1000 * 60 * 60 * 24 * 7
+        }
+    }))
+//Flash Setup
+const flash = require('connect-flash')
+app.use(flash())
 
 
 
@@ -33,7 +53,12 @@ mongoose.connect('mongodb://127.0.0.1:27017/Yelp-Camp')
     })
 
 
-
+app.use((req, res, next) => {
+    res.locals.success = req.flash('success')
+    res.locals.error = req.flash('error')
+    next()
+})
+    
 
 
 app.get('/', (req, res) => {
