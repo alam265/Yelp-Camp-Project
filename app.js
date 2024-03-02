@@ -9,6 +9,7 @@ const User = require("./models/user")
 //Routes 
 const campgroundRouter = require('./routes/campground')
 const reviewRouter = require('./routes/reviews')
+const userRouter = require('./routes/user')
 
 // Passport and Passport-local 
 const passport  = require("passport")
@@ -77,6 +78,7 @@ app.get('/', (req, res) => {
 
 })
 
+app.use("/",userRouter)
 app.use('/campgrounds', campgroundRouter)
 app.use("/campgrounds/:id/reviews", reviewRouter)
 
