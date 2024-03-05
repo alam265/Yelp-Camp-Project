@@ -1,6 +1,8 @@
 const express = require('express')
 const router = express.Router()
 const Campground = require('../models/campground')
+//Middleware import 
+const {isLoggedIn} = require('../middleware/isLoggedin')
 const validateCampground = require('../middleware/validateCampground')
 const wrapAsync = require('../utilis/wrapError')
 
@@ -9,7 +11,7 @@ router.get('/', async (req, res) => {
     res.render('campgrounds/index', { camps, title: "All Campgrounds - YelpCamp" })
 })
 
-router.get('/new', (req, res) => {
+router.get('/new',isLoggedIn, (req, res) => {
     res.render('campgrounds/new', { title: "Add Campground- YelpCamp" })
 })
 
@@ -35,7 +37,7 @@ router.get('/:id', wrapAsync(async (req, res) => {
 }))
 
 
-router.get('/:id/edit', wrapAsync(async (req, res) => {
+router.get('/:id/edit',isLoggedIn, wrapAsync(async (req, res) => {
     const { id } = req.params
     const foundCamp = await Campground.findById(id)
     if(!foundCamp){
@@ -48,15 +50,17 @@ router.get('/:id/edit', wrapAsync(async (req, res) => {
 router.patch('/:id', validateCampground, wrapAsync(async (req, res) => {
     const { id } = req.params
     await Campground.findByIdAndUpdate(id, { ...req.body })
+    req.flash('success',"Edited")
     res.redirect(`/campgrounds/${id}`)
 
 
 }))
 
 
-router.delete('/:id', wrapAsync(async (req, res) => {
+router.delete('/:id',isLoggedIn, wrapAsync(async (req, res) => {
     const { id } = req.params
     await Campground.findByIdAndDelete(id)
+    req.flash('success','Deleted Successfully')
     res.redirect('/campgrounds')
 
 
