@@ -1,8 +1,8 @@
-const {campgroundSchema} = require("../Schema/joiSchema")
+const {reviewSchema} = require("../Schema/joiSchema")
 const AppError = require("../utilis/appError")
 
-const validateCampground = (req, res, next) => {
-    const { error } = campgroundSchema.validate(req.body);
+const validateReview = (req, res, next) => {
+    const { error } = reviewSchema.validate(req.body);
     
     if (error) {
         const msg = error.details.map(el => el.message).join(',')
@@ -12,4 +12,4 @@ const validateCampground = (req, res, next) => {
     }
 }
 
-module.exports = validateCampground 
+module.exports = validateReview 

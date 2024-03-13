@@ -3,9 +3,10 @@ const router = express.Router({mergeParams:true});
 const Campground = require('../models/campground');
 const Review = require('../models/reviewsSchema');
 const wrapAsync = require('../utilis/wrapError');
+const validateReview = require('../middleware/validateReview')
 
 
-router.post("/", wrapAsync(async (req, res) => {
+router.post("/", validateReview, wrapAsync(async (req, res) => {
     const { id } = req.params
     const camp = await Campground.findById(id)
     const review = new Review(req.body)

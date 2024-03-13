@@ -18,13 +18,17 @@
                             <%= foundCamp.location%>
                         </li>
                         <li class="list-group-item">$<%= foundCamp.price%>/night</li>
+                        <li class="list-group-item">Created by <%= foundCamp.author.username%></li>
                     </ul>
+
+                    <% if(currentUser  && foundCamp.author.equals(currentUser._id)) {%>
                     <div class="card-body">
                         <a class="card-link btn btn-info" href="/campgrounds/<%=foundCamp._id%>/edit">Edit</a>
                         <form class="d-inline" action="/campgrounds/<%=foundCamp._id%>?_method=DELETE" method="POST">
                             <button class="btn btn-danger">Delete</button>
                         </form>
                     </div>
+                    <% } %>
                     <div class="card-footer text-muted">
                         2 days ago
                     </div>
@@ -52,7 +56,10 @@
                     <button class="btn btn-success">Submit</button>
                 </form>
 
+
+                <% if(foundCamp.reviews.length) { %>
                 <h2>Reviews:</h2>
+                <% } %>
 
 
                 <% for(let review of foundCamp.reviews) {%>
