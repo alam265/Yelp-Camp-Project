@@ -11,7 +11,7 @@ const campgroundSchema = joi.object({
 const reviewSchema = joi.object({
 
         rating: joi.number().required().min(1).max(5),
-        body: joi.string().required()
+        message: joi.string().required()
     
 }).required()
 

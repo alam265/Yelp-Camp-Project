@@ -1,19 +1,20 @@
 const express = require("express")
 const router = express.Router()
-const passport  = require('passport')
+const passport = require('passport')
 const User = require("../models/user")
-const {storeReturnTo} = require('../middleware/storeReturnTo')
+const { storeReturnTo } = require('../middleware/storeReturnTo')
+const Review = require('../models/reviewsSchema')
 
-router.get('/register', (req, res)=>{
+router.get('/register', (req, res) => {
     res.render('user/register')
 })
 
-router.post('/register', async(req, res)=>{
-    try{
-        const {username, email, password} = req.body 
-        const newUser = new User({username,email})
+router.post('/register', async (req, res) => {
+    try {
+        const { username, email, password } = req.body
+        const newUser = new User({ username, email })
         await User.register(newUser, password)
-        
+
         req.login(newUser, err => {
             if (err) return next(err);
             req.flash('success', 'Welcome to Yelp Camp!');
@@ -21,25 +22,25 @@ router.post('/register', async(req, res)=>{
         })
 
 
-    }catch(e){
-        req.flash('error',e.message)
+    } catch (e) {
+        req.flash('error', e.message)
         res.redirect('/register')
     }
 })
 
-router.get("/login",(req, res)=>{
+router.get("/login", (req, res) => {
     res.render('user/login')
 })
 
-router.post('/login',storeReturnTo, passport.authenticate('local', {failureFlash:true, failureRedirect:'/login'}), (req,res)=>{
-    req.flash('success','Welcome Back!!')
-    
+router.post('/login', storeReturnTo, passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), (req, res) => {
+    req.flash('success', 'Welcome Back!!')
 
-    const redirectUrl =  res.locals.returnTo || '/campgrounds'
+
+    const redirectUrl = res.locals.returnTo || '/campgrounds'
     res.redirect(redirectUrl)
 })
 
-router.get('/logout',(req, res)=>{
+router.get('/logout', (req, res) => {
     req.logout(function (err) {
         if (err) {
             return next(err);
