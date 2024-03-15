@@ -10,11 +10,27 @@ const wrapAsync = require('../utilis/wrapError')
 //Controller Import 
 const CampgroundController = require('../controllers/campground')
 
-router.get('/', CampgroundController.index )
+//Cloudinary storage import 
+const {storage} = require('../cloudinary/main')
+
+//setup Multer
+const multer = require('multer')
+const upload = multer({storage })
+
+
+
+
+
+router.get('/', CampgroundController.index)
 
 router.get('/new', isLoggedIn, CampgroundController.renderCreateCampgroundForm)
 
-router.post('/', validateCampground, wrapAsync(CampgroundController.CreateCampground))
+// router.post('/', validateCampground, wrapAsync(CampgroundController.CreateCampground))
+router.post('/', upload.array('image'),(req, res)=> {
+    console.log(req.body)
+    console.log(req.files)
+    res.send("Worked?")
+})
 
 router.get('/:id', wrapAsync(CampgroundController.showCampground))
 
