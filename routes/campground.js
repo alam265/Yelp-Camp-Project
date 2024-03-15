@@ -7,73 +7,24 @@ const { isAuthor } = require('../middleware/isAuthor')
 const validateCampground = require('../middleware/validateCampground')
 const wrapAsync = require('../utilis/wrapError')
 
-router.get('/', async (req, res) => {
-    const camps = await Campground.find({})
-    res.render('campgrounds/index', { camps, title: "All Campgrounds - YelpCamp" })
-})
+//Controller Import 
+const CampgroundController = require('../controllers/campground')
 
-router.get('/new', isLoggedIn, (req, res) => {
-    res.render('campgrounds/new', { title: "Add Campground- YelpCamp" })
-})
+router.get('/', CampgroundController.index )
 
-router.post('/', validateCampground, wrapAsync(async (req, res) => {
+router.get('/new', isLoggedIn, CampgroundController.renderCreateCampgroundForm)
 
-    const newCamp = new Campground({ ...req.body })
-    newCamp.author = req.user._id
+router.post('/', validateCampground, wrapAsync(CampgroundController.CreateCampground))
 
-    await newCamp.save()
-    req.flash('success', "Successfully Created a Campground!")
-    res.redirect(`/campgrounds/${newCamp._id}`)
+router.get('/:id', wrapAsync(CampgroundController.showCampground))
 
 
-}))
+router.get('/:id/edit', isLoggedIn, isAuthor, wrapAsync(CampgroundController.renderEditForm))
 
-router.get('/:id', wrapAsync(async (req, res) => {
-    const { id } = req.params
-    const foundCamp = await Campground.findById(id).populate({
-        path: 'reviews',
-        populate: {
-            path: 'author'             //Nested populate
-        }
-    }).populate('author')
-    console.log(foundCamp)
-    if (!foundCamp) {
-        req.flash('error', 'No Campground is found')
-        return res.redirect('/campgrounds')
-    }
-    res.render('campgrounds/show', { foundCamp, title: "Details - YelpCamp" })
-
-}))
+router.patch('/:id', isLoggedIn, isAuthor, validateCampground, wrapAsync(CampgroundController.editCampground))
 
 
-router.get('/:id/edit', isLoggedIn, isAuthor, wrapAsync(async (req, res) => {
-    const { id } = req.params
-    const foundCamp = await Campground.findById(id)
-    if (!foundCamp) {
-        req.flash('error', 'No Campground is found')
-        return res.redirect('/campgrounds')
-    }
-    res.render('campgrounds/edit', { foundCamp, title: "Edit - YelpCamp" })
-}))
-
-router.patch('/:id', isLoggedIn, isAuthor, validateCampground, wrapAsync(async (req, res) => {
-    const { id } = req.params
-    await Campground.findByIdAndUpdate(id, { ...req.body })
-    req.flash('success', "Edited")
-    res.redirect(`/campgrounds/${id}`)
-
-
-}))
-
-
-router.delete('/:id', isLoggedIn, isAuthor, wrapAsync(async (req, res) => {
-    const { id } = req.params
-    await Campground.findByIdAndDelete(id)
-    req.flash('success', 'Deleted Successfully')
-    res.redirect('/campgrounds')
-
-
-}))
+router.delete('/:id', isLoggedIn, isAuthor, wrapAsync(CampgroundController.deleteCampground))
 
 
 module.exports = router
