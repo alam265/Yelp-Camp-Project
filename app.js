@@ -29,10 +29,14 @@ app.use(methodOverride('_method'))
 //Setup public folder
 app.use(express.static(path.join(__dirname, 'public')))
 
+//Setup Ejs 
 app.engine('ejs', ejsMate)
 app.set('view engine', 'ejs')
+
+//Setup views Folder
 app.set('views', path.join(__dirname, 'views'))
 
+//Body Parser
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 

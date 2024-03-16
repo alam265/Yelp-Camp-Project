@@ -3,6 +3,18 @@ const Review = require("./reviewsSchema")
 const User = require('./user')
 const Schema = mongoose.Schema
 
+
+
+
+const ImageSchema = new Schema({
+    url: String,
+    filename: String
+})
+
+ImageSchema.virtual('thumbnail').get(function () {
+    return this.url.replace('/upload', '/upload/w_200');
+});
+
 const CampgroundSchema = new Schema({
     
     title:String, 
@@ -13,7 +25,8 @@ const CampgroundSchema = new Schema({
     }, 
     description:String, 
     location: String, 
-    image: String,
+    images: [ImageSchema],
+    
     author: {
         type: Schema.Types.ObjectId,
         ref:'User'

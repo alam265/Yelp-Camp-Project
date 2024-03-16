@@ -9,16 +9,20 @@
                     enctype="multipart/form-data">
                     <div class="mb-3">
                         <label class="form-label" for="title">Title</label>
-                        <input class="form-control" type="text" id="title" name="title" required>
+                        <input class="form-control" type="text" id="title" name="campground[title]" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="location">Location</label>
-                        <input class="form-control" type="text" id="location" name="location" required>
+                        <input class="form-control" type="text" id="location" name="campground[location]" required>
                     </div>
                     <div class="mb-3">
                         <label for="img">Upload Image</label>
                         <div class="mt-3">
-                            <input type="file" name="image" id="img" multiple>
+                            <!-- <input type="file" name="image" id="img" multiple> -->
+                            <div class="mb-3">
+                                
+                                <input class="form-control"  type="file" name="image" id="formFileMultiple" multiple>
+                              </div>
 
                             <div class="valid-feedback">
                                 Allright
@@ -32,13 +36,13 @@
                         <div class="input-group">
                             <span class="input-group-text" id="price-label">$</span>
                             <input type="text" class="form-control" id="price" placeholder="0.00" aria-label="price"
-                                aria-describedby="price-label" name="price" required>
+                                aria-describedby="price-label" name="campground[price]" required>
                         </div>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label" for="description">Description</label>
-                        <textarea class="form-control" type="text" id="description" name="description"
+                        <textarea class="form-control" type="text" id="description" name="campground[description]"
                             required></textarea>
                     </div>
                     <div class="mb-3">

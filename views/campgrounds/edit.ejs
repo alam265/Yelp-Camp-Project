@@ -4,25 +4,27 @@
         <div class="row">
             <h1 class="text-center">Edit Campground</h1>
             <div class="col-6 offset-3">
-                <form action="/campgrounds/<%= foundCamp._id %>?_method=PATCH", method="post" class="needs-validation" novalidate>
+                <form action="/campgrounds/<%= foundCamp._id %>?_method=PATCH", method="post" class="needs-validation" novalidate enctype="multipart/form-data">
                     <div class="mb-3">
                         <label class="form-label" for="title">Title</label>
-                        <input class="form-control" type="text" id="title" name="title" value="<%= foundCamp.title %>" required>
+                        <input class="form-control" type="text" id="title" name="campground[title]" value="<%= foundCamp.title %>" required>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="location">Location</label>
-                        <input class="form-control" type="text" id="location" name="location" value="<%= foundCamp.location %>" required>
+                        <input class="form-control" type="text" id="location" name="campground[location]" value="<%= foundCamp.location %>" required>
                     </div>
-                    <div class="mb-3">
-                        <label class="form-label" for="image">Image Url</label>
-                        <input class="form-control" type="text" id="image" name="image" value="<%= foundCamp.image %>" required> 
+                    <div>
+                        <div class="mb-3">
+                            <label for="formFileMultiple" class="form-label">Add More Images</label>
+                            <input class="form-control" type="file" name="image" id="formFileMultiple" multiple>
+                          </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label" for="price">Campground Price</label>
                         <div class="input-group">
                             <span class="input-group-text" id="price-label">$</span>
                             <input type="text" class="form-control" id="price" placeholder="0.00" aria-label="price"
-                                aria-describedby="price-label" name="price" value="<%= foundCamp.price %>" required>
+                                aria-describedby="price-label" name="campground[price]" value="<%= foundCamp.price %>" required>
                         
                             <div class="invalid-feedback">
                                 You must enter this.
@@ -35,12 +37,27 @@
         
                     <div class="mb-3">
                         <label class="form-label" for="description">Description</label>
-                        <textarea class="form-control" type="text" id="description" name="description" required><%= foundCamp.description  %></textarea>
+                        <textarea class="form-control" type="text" id="description" name="campground[description]" required><%= foundCamp.description  %></textarea>
+                    </div>
+                    <div class="mb-3">
+
+                        <% foundCamp.images.forEach(function(img, i){ %> 
+                            <img src="<%= img.thumbnail %>" class="img-thumbnail" alt="">
+                            <div class="form-check-inline">
+                                <input type="checkbox" name="deleteImages[]" id="img-<%= i %> " value="<%=img.filename %>">
+    
+                            </div>
+                            <label for="img-<%= i %> ">Delete?</label>
+    
+    
+                        <% }) %>
+    
                     </div>
                     <div class="mb-3">
                         <button class="btn btn-success">Save Changes</button>
                     </div>
                 </form>
+               
                 <a href="/campgrounds">All Campgrounds</a>
             </div>
         </div>

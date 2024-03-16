@@ -25,19 +25,15 @@ router.get('/', CampgroundController.index)
 
 router.get('/new', isLoggedIn, CampgroundController.renderCreateCampgroundForm)
 
-// router.post('/', validateCampground, wrapAsync(CampgroundController.CreateCampground))
-router.post('/', upload.array('image'),(req, res)=> {
-    console.log(req.body)
-    console.log(req.files)
-    res.send("Worked?")
-})
+router.post('/',upload.array('image'), validateCampground, wrapAsync(CampgroundController.CreateCampground))
+
 
 router.get('/:id', wrapAsync(CampgroundController.showCampground))
 
 
 router.get('/:id/edit', isLoggedIn, isAuthor, wrapAsync(CampgroundController.renderEditForm))
 
-router.patch('/:id', isLoggedIn, isAuthor, validateCampground, wrapAsync(CampgroundController.editCampground))
+router.patch('/:id', isLoggedIn, isAuthor, upload.array('image'), validateCampground, wrapAsync(CampgroundController.editCampground))
 
 
 router.delete('/:id', isLoggedIn, isAuthor, wrapAsync(CampgroundController.deleteCampground))
