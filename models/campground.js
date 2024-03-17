@@ -16,41 +16,52 @@ ImageSchema.virtual('thumbnail').get(function () {
 });
 
 const CampgroundSchema = new Schema({
-    
-    title:String, 
-    price:{
-        type: Number,
-        min:[0,'Price can not be negative'] 
 
-    }, 
-    description:String, 
-    location: String, 
+    title: String,
+    price: {
+        type: Number,
+        min: [0, 'Price can not be negative']
+
+    },
+    description: String,
+    location: String,
     images: [ImageSchema],
-    
+
     author: {
         type: Schema.Types.ObjectId,
-        ref:'User'
+        ref: 'User'
 
 
     },
-    reviews: [ 
+    reviews: [
         {
-            type: Schema.Types.ObjectId ,
+            type: Schema.Types.ObjectId,
             ref: 'Review'
-            
-        }
-    ]
 
-})
+        }
+    ],
+    geoLocation: {
+        type: {
+          type: String, 
+          enum: ['Point'], 
+          required: true
+        },
+        coordinates: {
+          type: [Number],
+          required: true
+        }
+      }
+
+    })
 
 CampgroundSchema.post('findOneAndDelete', async function (deletedCampground) {
-    if(deletedCampground){
+    if (deletedCampground) {
         await Review.deleteMany({
-            _id:{
+            _id: {
                 $in: deletedCampground.reviews
             }
         })
     }
 })
 
-module.exports = mongoose.model('Campground',CampgroundSchema)
+module.exports = mongoose.model('Campground', CampgroundSchema)

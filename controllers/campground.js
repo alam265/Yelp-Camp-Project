@@ -1,5 +1,11 @@
 const Campground = require('../models/campground')
+//Cloudinary Import
 const {cloudinary} = require('../cloudinary/main')
+
+//Setup Mapbox
+const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
+const geoCoder = mbxGeocoding({ accessToken: process.env.MAPBOX_TOKEN });
+
 
 module.exports.index = async (req, res) => {
     const camps = await Campground.find({})
@@ -11,12 +17,17 @@ module.exports.renderCreateCampgroundForm = (req, res) => {
 }
 
 module.exports.CreateCampground = async (req, res) => {
+    const geoData = await geoCoder.forwardGeocode({
+        query: req.body.campground.location,
+        limit: 2
+      })
+        .send()
 
     const newCamp = new Campground({ ...req.body.campground })
     newCamp.author = req.user._id
     newCamp.images = req.files.map(f => ({url:f.path, filename: f.filename}))
+    newCamp.geoLocation = geoData.body.features[0].geometry
     await newCamp.save()
-
     req.flash('success', "Successfully Created a Campground!")
     res.redirect(`/campgrounds/${newCamp._id}`)
 
@@ -31,7 +42,7 @@ module.exports.showCampground = async (req, res) => {
             path: 'author'             //Nested populate
         }
     }).populate('author')
-
+    console.log(foundCamp)
     if (!foundCamp) {
         req.flash('error', 'No Campground is found')
         return res.redirect('/campgrounds')
@@ -51,10 +62,16 @@ module.exports.renderEditForm = async (req, res) => {
 }
 
 module.exports.editCampground = async (req, res) => {
+    const geoData = await geoCoder.forwardGeocode({
+        query: req.body.campground.location,
+        limit: 2
+      })
+        .send()
     const { id } = req.params
     console.log(req.body)
     const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground })
     const imgs = req.files.map(f => ({url:f.path, filename: f.filename}))
+    campground.geoLocation = geoData.body.features[0].geometry
     campground.images.push(...imgs)
     await campground.save()
 
