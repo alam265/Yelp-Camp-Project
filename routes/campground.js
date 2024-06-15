@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const Campground = require('../models/campground')
+
 //Middleware import 
 const { isLoggedIn } = require('../middleware/isLoggedin')
 const { isAuthor } = require('../middleware/isAuthor')
@@ -16,7 +16,6 @@ const {storage} = require('../cloudinary/main')
 //setup Multer
 const multer = require('multer')
 const upload = multer({storage })
-
 
 
 

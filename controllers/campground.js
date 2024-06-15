@@ -26,7 +26,7 @@ module.exports.CreateCampground = async (req, res) => {
     const newCamp = new Campground({ ...req.body.campground })
     newCamp.author = req.user._id
     newCamp.images = req.files.map(f => ({url:f.path, filename: f.filename}))
-    newCamp.geoLocation = geoData.body.features[0].geometry
+    newCamp.geometry = geoData.body.features[0].geometry
     await newCamp.save()
     req.flash('success', "Successfully Created a Campground!")
     res.redirect(`/campgrounds/${newCamp._id}`)
@@ -71,7 +71,7 @@ module.exports.editCampground = async (req, res) => {
     console.log(req.body)
     const campground = await Campground.findByIdAndUpdate(id, { ...req.body.campground })
     const imgs = req.files.map(f => ({url:f.path, filename: f.filename}))
-    campground.geoLocation = geoData.body.features[0].geometry
+    campground.geometry = geoData.body.features[0].geometry
     campground.images.push(...imgs)
     await campground.save()
 

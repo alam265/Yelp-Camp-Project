@@ -1,4 +1,4 @@
-
+const User = require('../models/user')
 
 module.exports.renderRegisterForm = (req, res) => {
     res.render('user/register')
@@ -8,9 +8,9 @@ module.exports.register = async (req, res) => {
     try {
         const { username, email, password } = req.body
         const newUser = new User({ username, email })
-        await User.register(newUser, password)
+        const registeredUser = await User.register(newUser, password)
 
-        req.login(newUser, err => {
+        req.login(registeredUser, err => {
             if (err) return next(err);
             req.flash('success', 'Welcome to Yelp Camp!');
             res.redirect('/campgrounds');

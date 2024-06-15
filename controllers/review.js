@@ -25,3 +25,17 @@ module.exports.deleteReview = async (req, res) => {
     res.redirect(`/campgrounds/${id}`)
 
 }
+
+module.exports.renderEditForm = async(req, res)=>{
+    const {id, reviewId} = req.params
+    const foundCamp = await Campground.findById(id) 
+    const review = await Review.findById(reviewId)
+    res.render('review/edit', {foundCamp, review})
+}
+
+module.exports.editReview = async(req, res)=> {
+    const {id, reviewId} = req.params  
+    await Review.findByIdAndUpdate(reviewId, {...req.body})
+    req.flash('success','Review Edited')
+    res.redirect(`/campgrounds/${id}`)
+}

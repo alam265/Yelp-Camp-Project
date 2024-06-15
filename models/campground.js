@@ -1,9 +1,15 @@
 const mongoose = require('mongoose')
 const Review = require("./reviewsSchema")
 const User = require('./user')
+const { array } = require('joi')
 const Schema = mongoose.Schema
 
-
+//Including Virtual Fields into Json
+var schemaOptions = {
+    toJSON: {
+      virtuals: true
+    }
+  };
 
 
 const ImageSchema = new Schema({
@@ -40,7 +46,7 @@ const CampgroundSchema = new Schema({
 
         }
     ],
-    geoLocation: {
+    geometry: {
         type: {
           type: String, 
           enum: ['Point'], 
@@ -50,9 +56,17 @@ const CampgroundSchema = new Schema({
           type: [Number],
           required: true
         }
-      }
+      },
+      
 
-    })
+    },schemaOptions)
+
+
+CampgroundSchema.virtual('properties.popUpMarkUp').get(function(){
+    return `
+    <strong><a href="/campgrounds/${this._id}">${this.title}</a><strong>
+    <p>${this.description.substring(0, 20)}...</p>`
+})
 
 CampgroundSchema.post('findOneAndDelete', async function (deletedCampground) {
     if (deletedCampground) {

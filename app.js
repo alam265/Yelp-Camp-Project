@@ -10,8 +10,31 @@ const ejsMate = require('ejs-mate')
 const AppError = require('./utilis/appError')
 const User = require("./models/user")
 
+const sanitize = require('express-mongo-sanitize')
+app.use(sanitize())
 
+// db_url = process.env.DB_URL 
 
+//'mongodb://127.0.0.1:27017/Yelp-Camp'
+mongoose.connect('mongodb://127.0.0.1:27017/Yelp-Camp')
+    .then(() => {
+        console.log('MongoDB Connected')
+    }).catch(() => {
+        console.log('OPPS an Error Occured!')
+    })
+//Storing Session in MongoDB
+//Session Setup
+const session = require('express-session')
+const MongoDBStore = require("connect-mongo")(session);
+const store = new MongoDBStore({
+    url: 'mongodb://127.0.0.1:27017/Yelp-Camp',
+    
+    touchAfter: 24 * 60 * 60
+});
+
+store.on("error", function (e) {
+    console.log("SESSION STORE ERROR", e)
+})
 
 //Routes 
 const campgroundRouter = require('./routes/campground')
@@ -29,6 +52,7 @@ app.use(methodOverride('_method'))
 //Setup public folder
 app.use(express.static(path.join(__dirname, 'public')))
 
+
 //Setup Ejs 
 app.engine('ejs', ejsMate)
 app.set('view engine', 'ejs')
@@ -40,15 +64,16 @@ app.set('views', path.join(__dirname, 'views'))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
-//Session Setup
-const session = require('express-session')
+
 app.use(session
-    ({
+    ({  
+        store,
         secret: 'thisisnotagoodsecret!',
         resave: false,  
         saveUninitialized: true,
         cookie: {
             httpOnly: true,
+            //secure: false,
             expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
             maxAge: 1000 * 60 * 60 * 24 * 7
         }
@@ -68,12 +93,6 @@ passport.deserializeUser(User.deserializeUser());
 
 
 
-mongoose.connect('mongodb://127.0.0.1:27017/Yelp-Camp')
-    .then(() => {
-        console.log('MongoDB Connected')
-    }).catch(() => {
-        console.log('OPPS an Error Occured!')
-    })
 
 //1st Middleware 
 app.use((req, res, next) => {
