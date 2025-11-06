@@ -1,6 +1,5 @@
 # Yelp-Camp-Project
 
-<<<<<<< HEAD
 A full-stack web application for discovering, reviewing, and managing campgrounds from around the world.
 
 ## Features
@@ -58,4 +57,4 @@ A full-stack web application for discovering, reviewing, and managing campground
 - Add reviews to help other campers
 
 =======
->>>>>>> 52e48bc (added)
+
